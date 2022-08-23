@@ -11,7 +11,8 @@ import SwiftUI
 struct PitchPerfectApp: App {
     var body: some Scene {
         WindowGroup {
-            ContentView()
+            RecordSoundView()
+            
         }
     }
 }
