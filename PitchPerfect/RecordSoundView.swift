@@ -9,6 +9,8 @@ import SwiftUI
 import AVFoundation
 struct RecordSoundView: View {
     
+    
+    
     @State var audioRecorderDelegate: AVAudioRecorderDelegate!
     @State private var recordingLabel: String = "Tap to Record..."
     @State private var recording: Bool = false
@@ -38,7 +40,7 @@ struct RecordSoundView: View {
     }
     
     func recordAudio(){
-        recording = true
+        
         recordingLabel = "Recording in Progress"
         
         let dirPath = NSSearchPathForDirectoriesInDomains(.documentDirectory, .userDomainMask, true)[0] as String
@@ -46,9 +48,7 @@ struct RecordSoundView: View {
         let pathArray = [dirPath, recordingName]
         filePath = URL(fileURLWithPath: pathArray.joined(separator: "/"))
         
-        let session = AVAudioSession.sharedInstance()
-        try! session.setCategory(.playAndRecord, options: .defaultToSpeaker)
-        try! session.setActive(true)
+        ConfigureUI(true)
         
         try! audioRecorder = AVAudioRecorder(url: filePath!, settings: [:])
         
@@ -57,14 +57,20 @@ struct RecordSoundView: View {
         audioRecorder.record()
     }
     func stopRecording(){
-        recording = false
+        
         recordingLabel = "Tap to Record..."
         playSoundViewShown = true
-        
         audioRecorder.stop()
-        print(audioRecorder.isRecording)
-        let audioSession = AVAudioSession.sharedInstance()
-        try! audioSession.setActive(false)
+        ConfigureUI(false)
+        
+    }
+    
+    func ConfigureUI(_ isRecording: Bool){
+        
+        let session = AVAudioSession.sharedInstance()
+        recording = isRecording
+        try! session.setCategory(.playAndRecord, options: .defaultToSpeaker)
+        try! session.setActive(isRecording)
         
     }
     
